@@ -1,0 +1,17 @@
+function manufactureGifts(
+  giftsToProduce: Array<{ toy: string, quantity: number }>
+): string[] {
+  const result: string[] = []
+
+  for (const item of giftsToProduce) {
+    // Validar cantidad
+    if (typeof item.quantity !== 'number' || item.quantity <= 0) continue
+
+    // Repetir el juguete según la cantidad
+    for (let i = 0; i < item.quantity; i++) {
+      result.push(item.toy)
+    }
+  }
+
+  return result
+}
