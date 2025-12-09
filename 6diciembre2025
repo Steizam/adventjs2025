@@ -1,0 +1,73 @@
+/**
+ * @param {{ hand: 'L' | 'R', color: string }[]} gloves
+ * @returns {string[]} Colors of matched pairs
+ */
+function matchGloves(gloves) {
+  const pairs = [];
+  const leftGloves = {}; // Contador de guantes izquierdos por color
+  const rightGloves = {}; // Contador de guantes derechos por color
+  
+  for (const glove of gloves) {
+    const { hand, color } = glove;
+    
+    if (hand === 'L') {
+      // Si hay un guante derecho disponible del mismo color, hacer el par
+      if (rightGloves[color] && rightGloves[color] > 0) {
+        pairs.push(color);
+        rightGloves[color]--;
+      } else {
+        // Guardar el guante izquierdo para emparejar después
+        leftGloves[color] = (leftGloves[color] || 0) + 1;
+      }
+    } else { // hand === 'R'
+      // Si hay un guante izquierdo disponible del mismo color, hacer el par
+      if (leftGloves[color] && leftGloves[color] > 0) {
+        pairs.push(color);
+        leftGloves[color]--;
+      } else {
+        // Guardar el guante derecho para emparejar después
+        rightGloves[color] = (rightGloves[color] || 0) + 1;
+      }
+    }
+  }
+  
+  return pairs;
+}
+
+// Ejemplos de prueba
+const gloves = [
+  { hand: 'L', color: 'red' },
+  { hand: 'R', color: 'red' },
+  { hand: 'R', color: 'green' },
+  { hand: 'L', color: 'blue' },
+  { hand: 'L', color: 'green' }
+];
+
+console.log('Ejemplo 1:', matchGloves(gloves)); // ["red", "green"]
+
+const gloves2 = [
+  { hand: 'L', color: 'gold' },
+  { hand: 'R', color: 'gold' },
+  { hand: 'L', color: 'gold' },
+  { hand: 'L', color: 'gold' },
+  { hand: 'R', color: 'gold' }
+];
+
+console.log('Ejemplo 2:', matchGloves(gloves2)); // ["gold", "gold"]
+
+const gloves3 = [
+  { hand: 'L', color: 'red' },
+  { hand: 'R', color: 'green' },
+  { hand: 'L', color: 'blue' }
+];
+
+console.log('Ejemplo 3:', matchGloves(gloves3)); // []
+
+const gloves4 = [
+  { hand: 'L', color: 'green' },
+  { hand: 'L', color: 'red' },
+  { hand: 'R', color: 'red' },
+  { hand: 'R', color: 'green' }
+];
+
+console.log('Ejemplo 4:', matchGloves(gloves4)); // ['red', 'green']

@@ -1,0 +1,52 @@
+/**
+ * @param {string} code - The code to decipher
+ * @returns {string|null} The deciphered PIN or null if less than 4 digits
+ */
+function decodeSantaPin(code) {
+  // Extraer todos los bloques [...]
+  const blocks = code.match(/\[[^\]]+\]/g);
+  
+  if (!blocks) return null;
+  
+  const digits = [];
+  
+  for (const block of blocks) {
+    // Quitar los corchetes
+    const content = block.slice(1, -1);
+    
+    // Verificar si es el bloque especial [<]
+    if (content === '<') {
+      if (digits.length === 0) return null;
+      // Repetir el último dígito
+      digits.push(digits[digits.length - 1]);
+      continue;
+    }
+    
+    // Obtener el número inicial
+    let digit = parseInt(content[0]);
+    
+    // Aplicar las operaciones
+    for (let i = 1; i < content.length; i++) {
+      const op = content[i];
+      if (op === '+') {
+        digit = (digit + 1) % 10;
+      } else if (op === '-') {
+        digit = (digit - 1 + 10) % 10;
+      }
+    }
+    
+    digits.push(digit);
+  }
+  
+  // Verificar que tengamos exactamente 4 dígitos
+  if (digits.length < 4) return null;
+  
+  // Retornar solo los primeros 4 dígitos
+  return digits.slice(0, 4).join('');
+}
+
+// Pruebas
+console.log(decodeSantaPin('[1++][2-][3+][<]')); // "3144"
+console.log(decodeSantaPin('[9+][0-][4][<]'));   // "0944"
+console.log(decodeSantaPin('[1+][2-]'));         // null (solo 2 dígitos)
+console.log(decodeSantaPin('[0-][9+][5++][<]')); // "9057"

@@ -1,0 +1,83 @@
+
+Voy a ayudar al elfo becario a envolver regalos correctamente. Analicemos el problema:
+
+Si size < 2, devolvemos cadena vacía
+Necesitamos un cuadrado de size x size
+El borde usa el symbol
+El interior está vacío (espacios)
+Función drawGift - Envolver Regalos
+Código 
+¡Listo! La función ya funciona correctamente. Aquí está la explicación:
+
+Cómo funciona:
+
+Validación: Si size < 2, devuelve una cadena vacía
+Primera fila: Todos los caracteres son el símbolo (borde superior)
+Filas intermedias: Símbolo al inicio, espacios en medio, símbolo al final (bordes laterales con interior vacío)
+Última fila: Todos los caracteres son el símbolo (borde inferior)
+Resultado: Une todas las filas con
+
+
+
+
+
+
+
+/**
+ * @param {number} size - The size of the gift
+ * @param {string} symbol - The symbol to draw
+ * @returns {string} The gift drawn
+ */
+function drawGift(size, symbol) {
+  // Si el tamaño es menor que 2, devolver cadena vacía
+  if (size < 2) {
+    return '';
+  }
+  
+  let result = [];
+  
+  // Construir cada fila del regalo
+  for (let i = 0; i < size; i++) {
+    let row = '';
+    
+    // Primera fila: todos símbolos
+    if (i === 0) {
+      row = symbol.repeat(size);
+    }
+    // Última fila: todos símbolos
+    else if (i === size - 1) {
+      row = symbol.repeat(size);
+    }
+    // Filas intermedias: símbolo + espacios + símbolo
+    else {
+      row = symbol + ' '.repeat(size - 2) + symbol;
+    }
+    
+    result.push(row);
+  }
+  
+  // Unir todas las filas con saltos de línea
+  return result.join('\n');
+}
+
+
+// Pruebas
+const g1 = drawGift(4, '*');
+console.log(g1);
+console.log('---');
+
+const g2 = drawGift(3, '#');
+console.log(g2);
+console.log('---');
+
+const g3 = drawGift(2, '-');
+console.log(g3);
+console.log('---');
+
+const g4 = drawGift(1, '+');
+console.log(g4);
+console.log('(vacío)');
+console.log('---');
+
+const g5 = drawGift(5, '🎁');
+console.log(g5);

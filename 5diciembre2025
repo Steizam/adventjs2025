@@ -1,0 +1,34 @@
+/**
+ * @param {string} fromTime - The current time in elf format
+ * @param {string} takeOffTime - The take off time in elf format
+ * @returns {number} The time in seconds until take off
+ */
+function timeUntilTakeOff(fromTime, takeOffTime) {
+  // Función para convertir el formato elfo a timestamp
+  const elfToTimestamp = (elfTime) => {
+    // Eliminar el sufijo " NP"
+    const cleanTime = elfTime.replace(' NP', '');
+    
+    // Separar fecha y hora
+    const [datePart, timePart] = cleanTime.split('@');
+    
+    // Extraer componentes de fecha
+    const [year, month, day] = datePart.split('*').map(Number);
+    
+    // Extraer componentes de hora
+    const [hour, minute, second] = timePart.split('|').map(Number);
+    
+    // Crear objeto Date (los meses en JS van de 0-11)
+    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    
+    // Retornar timestamp en segundos
+    return Math.floor(date.getTime() / 1000);
+  };
+  
+  // Convertir ambas fechas a timestamps
+  const fromTimestamp = elfToTimestamp(fromTime);
+  const takeOffTimestamp = elfToTimestamp(takeOffTime);
+  
+  // Calcular la diferencia en segundos
+  return takeOffTimestamp - fromTimestamp;
+}

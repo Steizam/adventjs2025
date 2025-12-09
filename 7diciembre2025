@@ -1,0 +1,44 @@
+/** @param {number} height - Height of the tree
+ *  @param {string} ornament - Character to use as ornament
+ *  @param {number} frequency - How often ornaments appear
+ *  @returns {string} The decorated tree
+ */
+function drawTree(height, ornament, frequency) {
+  let tree = '';
+  let position = 1; // Contador global de posiciones
+  
+  // Construir cada fila del árbol
+  for (let row = 1; row <= height; row++) {
+    // Calcular espacios para centrar
+    const spaces = ' '.repeat(height - row);
+    
+    // Calcular número de caracteres en esta fila
+    const charsInRow = 2 * row - 1;
+    
+    // Construir la fila
+    let rowContent = '';
+    for (let i = 0; i < charsInRow; i++) {
+      if (position % frequency === 0) {
+        rowContent += ornament;
+      } else {
+        rowContent += '*';
+      }
+      position++;
+    }
+    
+    tree += spaces + rowContent + '\n';
+  }
+  
+  // Añadir el tronco centrado
+  const trunkSpaces = ' '.repeat(height - 1);
+  tree += trunkSpaces + '#';
+  
+  return tree;
+}
+
+// Ejemplos de prueba
+console.log(drawTree(5, 'o', 2));
+console.log('\n---\n');
+console.log(drawTree(3, '@', 3));
+console.log('\n---\n');
+console.log(drawTree(4, '+', 1));

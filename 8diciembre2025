@@ -1,0 +1,33 @@
+/**
+ * @param {string} toy - The toy to find the first unique one letter
+ * @returns {string} The first unique letter in the toy
+ */
+function findUniqueToy(toy) {
+  // Contar las apariciones de cada letra (ignorando mayúsculas)
+  const count = {};
+  
+  for (const char of toy) {
+    const lowerChar = char.toLowerCase();
+    count[lowerChar] = (count[lowerChar] || 0) + 1;
+  }
+  
+  // Buscar la primera letra que aparece solo una vez
+  for (const char of toy) {
+    const lowerChar = char.toLowerCase();
+    if (count[lowerChar] === 1) {
+      return char;
+    }
+  }
+  
+  return '';
+}
+
+// Ejemplos de uso:
+console.log(findUniqueToy('Gift'));      // 'G'
+console.log(findUniqueToy('sS'));        // ''
+console.log(findUniqueToy('reindeeR'));  // 'i'
+console.log(findUniqueToy('AaBbCc'));    // ''
+console.log(findUniqueToy('abcDEF'));    // 'a'
+console.log(findUniqueToy('aAaAaAF'));   // 'F'
+console.log(findUniqueToy('sTreSS'));    // 'T'
+console.log(findUniqueToy('z'));         // 'z'
