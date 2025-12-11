@@ -1,0 +1,72 @@
+/**
+ * @param {string[]} warehouse - The warehouse layout
+ * @returns {number} The count of unwatched gifts
+ */
+function findUnsafeGifts(warehouse) {
+  let unsafeCount = 0;
+  
+  // Recorrer cada posición del almacén
+  for (let row = 0; row < warehouse.length; row++) {
+    for (let col = 0; col < warehouse[row].length; col++) {
+      // Si encontramos un regalo
+      if (warehouse[row][col] === '*') {
+        // Verificar si tiene una cámara adyacente
+        let hasCameraAdjacent = false;
+        
+        // Arriba
+        if (row > 0 && warehouse[row - 1][col] === '#') {
+          hasCameraAdjacent = true;
+        }
+        
+        // Abajo
+        if (row < warehouse.length - 1 && warehouse[row + 1][col] === '#') {
+          hasCameraAdjacent = true;
+        }
+        
+        // Izquierda
+        if (col > 0 && warehouse[row][col - 1] === '#') {
+          hasCameraAdjacent = true;
+        }
+        
+        // Derecha
+        if (col < warehouse[row].length - 1 && warehouse[row][col + 1] === '#') {
+          hasCameraAdjacent = true;
+        }
+        
+        // Si no tiene cámara adyacente, es inseguro
+        if (!hasCameraAdjacent) {
+          unsafeCount++;
+        }
+      }
+    }
+  }
+  
+  return unsafeCount;
+}
+
+// Pruebas
+console.log(findUnsafeGifts([
+  '.*.',
+  '*#*',
+  '.*.'
+])); // ➞ 0
+
+console.log(findUnsafeGifts([
+  '...',
+  '.*.',
+  '...'
+])); // ➞ 1
+
+console.log(findUnsafeGifts([
+  '*.*',
+  '...',
+  '*#*'
+])); // ➞ 2
+
+console.log(findUnsafeGifts([
+  '.....',
+  '.*.*.',
+  '..#..',
+  '.*.*.',
+  '.....'
+])); // ➞ 4

@@ -1,0 +1,77 @@
+/**
+ * @param {string} board - Represent the board situation
+ * @param {string} moves - Movement direction
+ * @returns {'fail' | 'crash' | 'success'}
+ */
+function moveReno(board, moves) {
+  // Parsear el tablero: eliminar primera y última línea vacía
+  const lines = board.split('\n').filter(line => line.trim() !== '');
+  
+  // Encontrar la posición inicial del reno (@)
+  let renoRow = -1;
+  let renoCol = -1;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const col = lines[i].indexOf('@');
+    if (col !== -1) {
+      renoRow = i;
+      renoCol = col;
+      break;
+    }
+  }
+  
+  // Variable para trackear si hemos recogido algo
+  let collected = false;
+  
+  // Procesar cada movimiento
+  for (const move of moves) {
+    // Calcular nueva posición
+    let newRow = renoRow;
+    let newCol = renoCol;
+    
+    switch (move) {
+      case 'U':
+        newRow--;
+        break;
+      case 'D':
+        newRow++;
+        break;
+      case 'L':
+        newCol--;
+        break;
+      case 'R':
+        newCol++;
+        break;
+    }
+    
+    // Verificar si se sale del tablero
+    if (newRow < 0 || newRow >= lines.length || 
+        newCol < 0 || newCol >= lines[newRow].length) {
+      // Si ya recogimos algo antes, es success
+      if (collected) return 'success';
+      return 'crash';
+    }
+    
+    const cell = lines[newRow][newCol];
+    
+    // Verificar si choca con obstáculo
+    if (cell === '#') {
+      // Si ya recogimos algo antes, es success
+      if (collected) return 'success';
+      return 'crash';
+    }
+    
+    // Verificar si recoge algo
+    if (cell === '*') {
+      collected = true;
+    }
+    
+    // Actualizar posición del reno
+    renoRow = newRow;
+    renoCol = newCol;
+  }
+  
+  // Después de todos los movimientos
+  if (collected) return 'success';
+  return 'fail';
+}
