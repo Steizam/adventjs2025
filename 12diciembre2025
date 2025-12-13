@@ -1,0 +1,76 @@
+/**
+ * @param {string} elf1 - The moves of the first elf
+ * @param {string} elf2 - The moves of the second elf
+ * @return {number} - The result of the battle
+ */
+function elfBattle(elf1, elf2) {
+  let hp1 = 3;
+  let hp2 = 3;
+  
+  // Procesar cada ronda
+  const rounds = Math.max(elf1.length, elf2.length);
+  
+  for (let i = 0; i < rounds; i++) {
+    // Si alguno ya murió, terminar
+    if (hp1 <= 0 || hp2 <= 0) break;
+    
+    const move1 = elf1[i] || '';
+    const move2 = elf2[i] || '';
+    
+    // Si no hay más movimientos para alguno, salir
+    if (!move1 && !move2) break;
+    
+    // Calcular daño simultáneo
+    let damage1 = 0; // Daño que recibe elfo 1
+    let damage2 = 0; // Daño que recibe elfo 2
+    
+    // Elfo 1 ataca a Elfo 2
+    if (move1 === 'A') {
+      // Ataque normal, puede ser bloqueado
+      if (move2 !== 'B') {
+        damage2 = 1;
+      }
+    } else if (move1 === 'F') {
+      // Ataque fuerte, no puede ser bloqueado
+      damage2 = 2;
+    }
+    
+    // Elfo 2 ataca a Elfo 1
+    if (move2 === 'A') {
+      // Ataque normal, puede ser bloqueado
+      if (move1 !== 'B') {
+        damage1 = 1;
+      }
+    } else if (move2 === 'F') {
+      // Ataque fuerte, no puede ser bloqueado
+      damage1 = 2;
+    }
+    
+    // Aplicar daño simultáneamente
+    hp1 -= damage1;
+    hp2 -= damage2;
+  }
+  
+  // Determinar ganador
+  if (hp1 <= 0 && hp2 <= 0) {
+    return 0; // Empate (ambos mueren)
+  } else if (hp1 <= 0) {
+    return 2; // Elfo 2 gana
+  } else if (hp2 <= 0) {
+    return 1; // Elfo 1 gana
+  } else if (hp1 === hp2) {
+    return 0; // Empate (misma vida)
+  } else if (hp1 > hp2) {
+    return 1; // Elfo 1 tiene más vida
+  } else {
+    return 2; // Elfo 2 tiene más vida
+  }
+}
+
+// Pruebas
+console.log(elfBattle('A', 'B')); // → 0
+console.log(elfBattle('F', 'B')); // → 1
+console.log(elfBattle('AAB', 'BBA')); // → 0
+console.log(elfBattle('AFA', 'BBA')); // → 1
+console.log(elfBattle('AFAB', 'BBAF')); // → 1
+console.log(elfBattle('AA', 'FF')); // → 2

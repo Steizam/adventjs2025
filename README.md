@@ -27,3 +27,9 @@ Retos:
 10 diciembre = done!
 
 11 diciembre = done!
+
+12 diciembre = done!
+
+13 diciembre = done!
+
+14 diciembre = done!
