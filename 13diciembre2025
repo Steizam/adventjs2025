@@ -1,0 +1,63 @@
+/**
+ * @param {string[]} factory - The factory layout
+ * @returns {'completed'|'broken'|'loop'} Result of the gift journey
+ */
+function runFactory(factory) {
+  const rows = factory.length;
+  const cols = factory[0].length;
+  
+  // Direcciones: derecha, izquierda, arriba, abajo
+  const directions = {
+    '>': [0, 1],
+    '<': [0, -1],
+    '^': [-1, 0],
+    'v': [1, 0]
+  };
+  
+  // Posición inicial
+  let row = 0;
+  let col = 0;
+  
+  // Set para rastrear posiciones visitadas
+  const visited = new Set();
+  
+  while (true) {
+    // Verificar si estamos fuera del tablero
+    if (row < 0 || row >= rows || col < 0 || col >= cols) {
+      return 'broken';
+    }
+    
+    // Obtener celda actual
+    const cell = factory[row][col];
+    
+    // Verificar si llegamos a la salida
+    if (cell === '.') {
+      return 'completed';
+    }
+    
+    // Crear clave única para la posición actual
+    const posKey = `${row},${col}`;
+    
+    // Verificar si ya visitamos esta posición
+    if (visited.has(posKey)) {
+      return 'loop';
+    }
+    
+    // Marcar posición como visitada
+    visited.add(posKey);
+    
+    // Obtener la dirección y moverse
+    const [dRow, dCol] = directions[cell];
+    row += dRow;
+    col += dCol;
+  }
+}
+
+// Ejemplos de prueba
+console.log(runFactory(['>>.'])); // 'completed'
+console.log(runFactory(['>>>'])); // 'broken'
+console.log(runFactory(['>><'])); // 'loop'
+console.log(runFactory(['>>v', '..<'])); // 'completed'
+console.log(runFactory(['>>v', '<<<'])); // 'broken'
+console.log(runFactory(['>v.', '^..'])); // 'completed'
+console.log(runFactory(['v.', '^.'])); // 'loop'
