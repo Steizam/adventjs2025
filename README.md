@@ -33,3 +33,13 @@ Retos:
 13 diciembre = done!
 
 14 diciembre = done!
+
+15 diciembre = done!
+
+16 diciembre = done!
+
+17 diciembre = done!
+
+18 diciembre = done!
+
+19 diciembre = done!

@@ -1,0 +1,28 @@
+/**
+ * @param {string[][]} routes - Array of [origin, destination] pairs
+ * @returns {string[]} The reconstructed route
+ */
+function revealSantaRoute(routes) {
+  if (routes.length === 0) return [];
+  
+  // El primer tramo es siempre el inicio
+  const result = [routes[0][0], routes[0][1]];
+  
+  // Crear un mapa de origen -> destino para búsqueda rápida
+  const routeMap = new Map();
+  for (let i = 1; i < routes.length; i++) {
+    routeMap.set(routes[i][0], routes[i][1]);
+  }
+  
+  // Continuar conectando tramos mientras sea posible
+  let currentDestination = result[result.length - 1];
+  
+  while (routeMap.has(currentDestination)) {
+    const nextDestination = routeMap.get(currentDestination);
+    result.push(nextDestination);
+    routeMap.delete(currentDestination); // Evitar ciclos
+    currentDestination = nextDestination;
+  }
+  
+  return result;
+}

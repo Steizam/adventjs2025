@@ -1,0 +1,84 @@
+/**
+  * @param {Array<Object>} data - The data to draw the table
+  * @param {string} sortBy - The field to sort the table
+  * @returns {string}
+  */
+function drawTable(data, sortBy) {
+  if (!data || data.length === 0) return '';
+  
+  // Obtener las columnas (keys del primer objeto)
+  const columns = Object.keys(data[0]);
+  
+  // Ordenar los datos
+  const sortedData = [...data].sort((a, b) => {
+    const valA = a[sortBy];
+    const valB = b[sortBy];
+    
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      return valA - valB;
+    }
+    return String(valA).localeCompare(String(valB));
+  });
+  
+  // Calcular el ancho de cada columna
+  const columnWidths = columns.map((col, idx) => {
+    // Considerar la letra de la cabecera (A, B, C...)
+    const headerLetter = String.fromCharCode(65 + idx);
+    let maxWidth = headerLetter.length;
+    
+    // Considerar todos los valores de esa columna
+    sortedData.forEach(row => {
+      const value = String(row[col]);
+      maxWidth = Math.max(maxWidth, value.length);
+    });
+    
+    return maxWidth;
+  });
+  
+  // Crear la línea separadora
+  const separator = '+' + columnWidths.map(w => '-'.repeat(w + 2)).join('+') + '+';
+  
+  // Crear la fila de cabecera
+  const headerRow = '|' + columnWidths.map((w, idx) => {
+    const letter = String.fromCharCode(65 + idx);
+    return ' ' + letter.padEnd(w, ' ') + ' ';
+  }).join('|') + '|';
+  
+  // Crear las filas de datos
+  const dataRows = sortedData.map(row => {
+    return '|' + columns.map((col, idx) => {
+      const value = String(row[col]);
+      return ' ' + value.padEnd(columnWidths[idx], ' ') + ' ';
+    }).join('|') + '|';
+  });
+  
+  // Unir todo
+  return [
+    separator,
+    headerRow,
+    separator,
+    ...dataRows,
+    separator
+  ].join('\n');
+}
+
+// Ejemplos de uso
+console.log(drawTable(
+  [
+    { name: 'Charlie', city: 'New York' },
+    { name: 'Alice', city: 'London' },
+    { name: 'Bob', city: 'Paris' }
+  ],
+  'name'
+));
+
+console.log('\n');
+
+console.log(drawTable(
+  [
+    { gift: 'Book', quantity: 5 },
+    { gift: 'Music CD', quantity: 1 },
+    { gift: 'Doll', quantity: 10 }
+  ],
+  'quantity'
+));

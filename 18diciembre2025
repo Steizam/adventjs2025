@@ -1,0 +1,54 @@
+/**
+ * @param {string[][]} board
+ * @returns {boolean}
+ */
+function hasFourInARow(board) {
+  if (!board || board.length === 0) return false;
+  
+  const rows = board.length;
+  const cols = board[0].length;
+  
+  // Función auxiliar para verificar si un color forma línea de 4
+  const checkLine = (r, c, dr, dc, color) => {
+    for (let i = 0; i < 4; i++) {
+      const newR = r + dr * i;
+      const newC = c + dc * i;
+      
+      // Verificar límites
+      if (newR < 0 || newR >= rows || newC < 0 || newC >= cols) {
+        return false;
+      }
+      
+      // Verificar que la celda tenga el mismo color
+      if (board[newR][newC] !== color) {
+        return false;
+      }
+    }
+    return true;
+  };
+  
+  // Recorrer toda la matriz
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const color = board[r][c];
+      
+      // Ignorar luces apagadas
+      if (color === '.') continue;
+      
+      // Verificar las 4 direcciones desde esta posición:
+      // Horizontal (→)
+      if (checkLine(r, c, 0, 1, color)) return true;
+      
+      // Vertical (↓)
+      if (checkLine(r, c, 1, 0, color)) return true;
+      
+      // Diagonal descendente (↘)
+      if (checkLine(r, c, 1, 1, color)) return true;
+      
+      // Diagonal ascendente (↙)
+      if (checkLine(r, c, 1, -1, color)) return true;
+    }
+  }
+  
+  return false;
+}
