@@ -1,0 +1,65 @@
+/**
+ * @param {string[][]} warehouse
+ * @param {number[]} drops
+ * @returns {string[][]}
+ */
+function dropGifts(warehouse, drops) {
+  // Crear una copia profunda del almacén para no modificar el original
+  const result = warehouse.map(row => [...row]);
+  
+  // Procesar cada regalo que se deja caer
+  for (const col of drops) {
+    // Buscar la posición más baja disponible en la columna
+    // Empezamos desde abajo hacia arriba
+    for (let row = result.length - 1; row >= 0; row--) {
+      if (result[row][col] === '.') {
+        // Colocar el regalo en la primera celda vacía desde abajo
+        result[row][col] = '#';
+        break;
+      }
+    }
+    // Si no hay espacio disponible (columna llena), el regalo se ignora
+  }
+  
+  return result;
+}
+
+// Ejemplos de uso:
+console.log("Ejemplo 1:");
+console.log(dropGifts(
+  [
+    ['.', '.', '.'],
+    ['.', '#', '.'],
+    ['#', '#', '.']
+  ],
+  [0]
+));
+
+console.log("\nEjemplo 2:");
+console.log(dropGifts(
+  [
+    ['.', '.', '.'],
+    ['#', '#', '.'],
+    ['#', '#', '#']
+  ],
+  [0, 2]
+));
+
+console.log("\nEjemplo 3:");
+console.log(dropGifts(
+  [
+    ['.', '.', '.'],
+    ['.', '.', '.'],
+    ['.', '.', '.']
+  ],
+  [0, 1, 2]
+));
+
+console.log("\nEjemplo 4:");
+console.log(dropGifts(
+  [
+    ['#', '#'],
+    ['#', '#']
+  ],
+  [0, 0]
+));

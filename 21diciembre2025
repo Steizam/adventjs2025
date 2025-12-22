@@ -1,0 +1,85 @@
+/**
+ * @param {string[][]} warehouse
+ * @param {number[]} drops
+ * @returns {string[][]}
+ */
+function clearGifts(warehouse, drops) {
+  // Crear una copia profunda del almacén para no modificar el original
+  const wh = warehouse.map(row => [...row]);
+  const rows = wh.length;
+  const cols = wh[0].length;
+  
+  // Procesar cada regalo que cae
+  for (const col of drops) {
+    // Buscar la posición más baja disponible en la columna
+    let placed = false;
+    for (let row = rows - 1; row >= 0; row--) {
+      if (wh[row][col] === '.') {
+        wh[row][col] = '#';
+        placed = true;
+        break;
+      }
+    }
+    
+    // Si no se pudo colocar, continuar con el siguiente regalo
+    if (!placed) continue;
+    
+    // Verificar y eliminar filas completas (puede haber efecto cascada)
+    let checkAgain = true;
+    while (checkAgain) {
+      checkAgain = false;
+      
+      for (let row = 0; row < wh.length; row++) {
+        // Verificar si la fila está completa
+        if (wh[row].every(cell => cell === '#')) {
+          // Eliminar la fila completa
+          wh.splice(row, 1);
+          // Añadir una nueva fila vacía al principio
+          wh.unshift(new Array(cols).fill('.'));
+          // Verificar de nuevo por si hay más filas completas
+          checkAgain = true;
+          break;
+        }
+      }
+    }
+  }
+  
+  return wh;
+}
+
+// Pruebas
+console.log("Prueba 1:");
+const result1 = clearGifts(
+  [
+    ['.', '.', '.'],
+    ['.', '.', '.'],
+    ['#', '.', '#']
+  ],
+  [1]
+);
+console.log(result1);
+// Esperado: [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]
+
+console.log("\nPrueba 2:");
+const result2 = clearGifts(
+  [
+    ['.', '.', '#'],
+    ['#', '.', '#'],
+    ['#', '.', '#']
+  ],
+  [0, 1, 2]
+);
+console.log(result2);
+// Esperado: [['.', '.', '#'], ['#', '.', '#'], ['#', '.', '#']]
+
+console.log("\nPrueba 3 - Efecto cascada:");
+const result3 = clearGifts(
+  [
+    ['#', '.', '#'],
+    ['#', '.', '#'],
+    ['#', '.', '#']
+  ],
+  [1, 1, 1]
+);
+console.log(result3);
+// Todas las filas se completan y desaparecen

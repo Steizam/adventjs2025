@@ -1,0 +1,90 @@
+/**
+ * @param {string[][]} maze
+ * @returns {boolean}
+ */
+function canEscape(maze) {
+  const rows = maze.length;
+  const cols = maze[0].length;
+  
+  // Encontrar posición inicial 'S'
+  let startRow = -1, startCol = -1;
+  
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (maze[i][j] === 'S') {
+        startRow = i;
+        startCol = j;
+        break;
+      }
+    }
+    if (startRow !== -1) break;
+  }
+  
+  // BFS para explorar el laberinto
+  const queue = [[startRow, startCol]];
+  const visited = new Set();
+  visited.add(`${startRow},${startCol}`);
+  
+  // Direcciones: arriba, abajo, izquierda, derecha
+  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  
+  while (queue.length > 0) {
+    const [row, col] = queue.shift();
+    
+    // Si llegamos a la salida
+    if (maze[row][col] === 'E') {
+      return true;
+    }
+    
+    // Explorar vecinos
+    for (const [dr, dc] of directions) {
+      const newRow = row + dr;
+      const newCol = col + dc;
+      const key = `${newRow},${newCol}`;
+      
+      // Verificar límites y condiciones
+      if (
+        newRow >= 0 && newRow < rows &&
+        newCol >= 0 && newCol < cols &&
+        maze[newRow][newCol] !== '#' &&
+        !visited.has(key)
+      ) {
+        visited.add(key);
+        queue.push([newRow, newCol]);
+      }
+    }
+  }
+  
+  return false;
+}
+
+// Tests
+console.log(canEscape([
+  ['S', '.', '#', '.'],
+  ['#', '.', '#', '.'],
+  ['.', '.', '.', '.'],
+  ['#', '#', '#', 'E']
+])); // → true
+
+console.log(canEscape([
+  ['S', '#', '#'],
+  ['.', '#', '.'],
+  ['.', '#', 'E']
+])); // → false
+
+console.log(canEscape([['S', 'E']])); // → true
+
+console.log(canEscape([
+  ['S', '.', '.', '.', '.'],
+  ['#', '#', '#', '#', '.'],
+  ['.', '.', '.', '.', '.'],
+  ['.', '#', '#', '#', '#'],
+  ['.', '.', '.', '.', 'E']
+])); // → true
+
+console.log(canEscape([
+  ['S', '.', '.'],
+  ['.', '.', '.'],
+  ['#', '#', '#'],
+  ['.', '.', 'E']
+])); // → false
