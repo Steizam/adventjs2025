@@ -1,0 +1,31 @@
+/**
+ * @param {object} tree1 - The first binary tree.
+ * @param {object} tree2 - The second binary tree.
+ * @returns {[boolean, string]}
+ */
+function isTreesSynchronized(tree1, tree2) {
+  // Función auxiliar para verificar si dos árboles son espejos
+  function areMirrors(node1, node2) {
+    // Si ambos son null, son espejos
+    if (!node1 && !node2) return true;
+    
+    // Si solo uno es null, no son espejos
+    if (!node1 || !node2) return false;
+    
+    // Los valores deben ser iguales
+    if (node1.value !== node2.value) return false;
+    
+    // El left de node1 debe ser espejo del right de node2
+    // El right de node1 debe ser espejo del left de node2
+    return areMirrors(node1.left, node2.right) && 
+           areMirrors(node1.right, node2.left);
+  }
+  
+  // Obtenemos el valor de la raíz del primer árbol
+  const rootValue = tree1 ? tree1.value : '';
+  
+  // Verificamos si los árboles están sincronizados
+  const synchronized = areMirrors(tree1, tree2);
+  
+  return [synchronized, rootValue];
+}

@@ -1,0 +1,89 @@
+/**
+ * @param {string[][]} map - The town map.
+ * @returns {number} - Minimum steps to deliver all gifts.
+ */
+function minStepsToDeliver(map) {
+  if (!map || map.length === 0) return 0;
+  
+  const rows = map.length;
+  const cols = map[0].length;
+  
+  // Encontrar posición inicial 'S' y todas las casas 'G'
+  let start = null;
+  const gifts = [];
+  
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (map[r][c] === 'S') {
+        start = [r, c];
+      } else if (map[r][c] === 'G') {
+        gifts.push([r, c]);
+      }
+    }
+  }
+  
+  // Si no hay regalos, la distancia es 0
+  if (gifts.length === 0) return 0;
+  
+  // BFS desde S para calcular distancias a todos los puntos
+  const distances = Array.from({ length: rows }, () => Array(cols).fill(-1));
+  const queue = [[start[0], start[1], 0]];
+  distances[start[0]][start[1]] = 0;
+  
+  const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  
+  let head = 0;
+  while (head < queue.length) {
+    const [r, c, dist] = queue[head++];
+    
+    for (const [dr, dc] of dirs) {
+      const nr = r + dr;
+      const nc = c + dc;
+      
+      if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+      if (map[nr][nc] === '#') continue;
+      if (distances[nr][nc] !== -1) continue;
+      
+      distances[nr][nc] = dist + 1;
+      queue.push([nr, nc, dist + 1]);
+    }
+  }
+  
+  // Sumar las distancias a cada casa con regalo
+  let totalSteps = 0;
+  
+  for (const [gr, gc] of gifts) {
+    if (distances[gr][gc] === -1) return -1;
+    totalSteps += distances[gr][gc];
+  }
+  
+  return totalSteps;
+}
+
+// Pruebas
+console.log("Prueba 1:");
+console.log(minStepsToDeliver([
+  ['S', '.', 'G'],
+  ['.', '#', '.'],
+  ['G', '.', '.']
+])); // Esperado: 4
+
+console.log("\nPrueba 2:");
+console.log(minStepsToDeliver([
+  ['S', '#', 'G'],
+  ['#', '#', '.'],
+  ['G', '.', '.']
+])); // Esperado: -1
+
+console.log("\nPrueba 3:");
+console.log(minStepsToDeliver([['S', 'G']])); // Esperado: 1
+
+console.log("\nPrueba 4 (sin regalos):");
+console.log(minStepsToDeliver([['S', '.', '.']])); // Esperado: 0
+
+console.log("\nPrueba 5 (múltiples regalos alcanzables):");
+console.log(minStepsToDeliver([
+  ['S', '.', 'G'],
+  ['.', '.', '.'],
+  ['G', '.', 'G']
+])); // Esperado: 2 + 2 + 4 = 8
